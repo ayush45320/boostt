@@ -1,0 +1,57 @@
+{
+    "customisation": {
+        "enable": true,
+        "use_custom_pfp": true,
+        "use_custom_banner": true,
+        "nick": "discord.gg/r1ch",
+        "bio": "**discord.gg/r1ch**"
+    },
+    "auto_config": {
+        "use_autoboosting": true,
+        "max_retry_on_failure": 100,
+        "Use_customization": true
+    },
+    "sellpass": {
+        "api_key": "",
+        "custom_field_name": "Invite",
+        "boosts_success_note": "Boosts Successful! Thanks For Buying",
+        "boosts_fail_note": "Boosts failed due to an error! Please make sure to join our server for support!"
+    },
+    "sellix": {
+        "invite_field_name": "Server Invite Link",
+        "orders": "https://your_sellix_orders_link"
+    },
+    "sellapp": {
+        "enabled": true,
+        "invite_field_name": "Invite",
+        "customisation": {
+            "enabled": true,
+            "nickname_field_name": "Nickname",
+            "bio_field_name": "Bio"
+        }
+    },
+    "webhook_url": "https://discord.com/api/webhooks/1381547344129949756/A8eYZX6ONbvH3RgBit3SjefaAVXtiYrUg05I7BirHuaUvvnn_olZ33YzG4__Zg9Gyppp",
+    "port": 8000,
+    "proxyless": false,
+    "status": "ayush",
+    "use_log": true,
+    "refresh_interval": 120,
+    "advance_mode": true,
+    "captcha_solver": {
+        "solve_captcha": true,
+        "use": "hcoptcha",
+        "hcoptcha_api_key": "",
+        "capsolver_api_key": "",
+        "csolver_key": "",
+        "dchcaptcha_api_key": "",
+        "max_retries": 5
+    },
+    "owners_ids": [
+        "831956780258164767"
+    ],
+    "admin_role_ids": [
+        "831956780258164767"
+    ],
+    "token": "MTM4MTUzNzc0NDg2MTQwMTE4OA.G4JI9U.4HyBOyOQ7xu2vggTBsz0Q4k8JygNXdYxNQvQ_c",
+    "key": ""
+}
