@@ -1,0 +1,235 @@
+
+{% extends "base.html" %}
+
+{% block title %}Boost Server - Discord Boost Bot{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-rocket text-primary me-2"></i>
+                        Boost Discord Server
+                    </h2>
+                    <p class="text-muted mb-0">Instantly boost any Discord server with premium Nitro tokens</p>
+                </div>
+                <div class="card-body">
+                    <form id="boostForm">
+                        <div class="mb-4">
+                            <label for="invite" class="form-label">
+                                <i class="fas fa-link me-2"></i>Server Invite Link
+                            </label>
+                            <input type="text" class="form-control" id="invite" required
+                                   placeholder="https://discord.gg/example or discord.gg/example">
+                            <div class="form-text">Enter the Discord server invite link you want to boost</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="amount" class="form-label">
+                                        <i class="fas fa-bolt me-2"></i>Number of Boosts
+                                    </label>
+                                    <select class="form-control" id="amount" required>
+                                        <option value="">Select boost amount</option>
+                                        <option value="2">2 Boosts</option>
+                                        <option value="4">4 Boosts</option>
+                                        <option value="6">6 Boosts</option>
+                                        <option value="8">8 Boosts</option>
+                                        <option value="10">10 Boosts</option>
+                                        <option value="14">14 Boosts (Level 1)</option>
+                                        <option value="28">28 Boosts (Level 2)</option>
+                                        <option value="42">42 Boosts (Level 3)</option>
+                                    </select>
+                                    <div class="form-text">Each boost requires 1 Nitro token (2 boosts per token)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="months" class="form-label">
+                                        <i class="fas fa-calendar me-2"></i>Duration
+                                    </label>
+                                    <select class="form-control" id="months" required>
+                                        <option value="">Select duration</option>
+                                        <option value="1">1 Month</option>
+                                        <option value="3">3 Months</option>
+                                    </select>
+                                    <div class="form-text">How long the boosts will last</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Important:</strong> Make sure the invite link is valid and the server allows boosting.
+                            Boosts will be applied immediately after submission.
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-rocket me-2"></i>Start Boosting
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Current Stock Display -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <span class="live-indicator"></span>Current Stock
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="text-center p-3 bg-success bg-opacity-10 rounded">
+                                <h4 class="text-success">1 Month Tokens</h4>
+                                <h2 id="1m-tokens" class="text-success">0</h2>
+                                <p class="text-muted mb-0">(<span id="1m-boosts">0</span> boosts available)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center p-3 bg-primary bg-opacity-10 rounded">
+                                <h4 class="text-primary">3 Month Tokens</h4>
+                                <h2 id="3m-tokens" class="text-primary">0</h2>
+                                <p class="text-muted mb-0">(<span id="3m-boosts">0</span> boosts available)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Result Modal -->
+<div class="modal fade" id="resultModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-chart-bar me-2"></i>Boost Results
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="resultContent">
+                <!-- Results will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('boostForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    showLoading(submitBtn);
+    
+    const formData = {
+        invite: document.getElementById('invite').value,
+        amount: parseInt(document.getElementById('amount').value),
+        months: parseInt(document.getElementById('months').value)
+    };
+    
+    try {
+        const response = await fetch('/api/boost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showResults(result, formData);
+        } else {
+            showError(result.error);
+        }
+    } catch (error) {
+        showError('An error occurred while processing your request');
+    } finally {
+        hideLoading(submitBtn, originalText);
+    }
+});
+
+function showResults(result, formData) {
+    const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+    const content = document.getElementById('resultContent');
+    
+    content.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-success bg-opacity-10">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h4 class="text-success">Successful Boosts</h4>
+                        <h2 class="text-success">${result.successful_boosts}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-danger bg-opacity-10">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h4 class="text-danger">Failed Boosts</h4>
+                        <h2 class="text-danger">${result.failed_boosts}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ${result.captcha_boosts > 0 ? `
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card bg-warning bg-opacity-10">
+                    <div class="card-body text-center">
+                        <i class="fas fa-robot fa-3x text-warning mb-3"></i>
+                        <h4 class="text-warning">Captcha Challenges</h4>
+                        <h2 class="text-warning">${result.captcha_boosts}</h2>
+                        <p class="text-muted">These boosts encountered captcha challenges</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ` : ''}
+        <div class="mt-4 p-3 bg-info bg-opacity-10 rounded">
+            <h5><i class="fas fa-info-circle me-2"></i>Boost Summary</h5>
+            <p><strong>Server:</strong> ${formData.invite}</p>
+            <p><strong>Requested:</strong> ${formData.amount} boosts (${formData.months} month${formData.months > 1 ? 's' : ''})</p>
+            <p><strong>Success Rate:</strong> ${Math.round((result.successful_boosts / formData.amount) * 100)}%</p>
+        </div>
+    `;
+    
+    modal.show();
+}
+
+function showError(message) {
+    const alertHtml = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    document.querySelector('.container').insertAdjacentHTML('afterbegin', alertHtml);
+}
+
+// Load initial stock
+fetch('/api/stock')
+    .then(response => response.json())
+    .then(data => updateStockDisplay(data));
+</script>
+{% endblock %}

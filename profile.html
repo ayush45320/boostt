@@ -1,0 +1,127 @@
+
+{% extends "base.html" %}
+
+{% block title %}Profile - Discord Boost Bot{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white text-center">
+                    <i class="fas fa-user-circle fa-3x mb-3"></i>
+                    <h3>{{ username }}</h3>
+                    {% if session.is_admin %}
+                        <span class="badge bg-warning">Admin</span>
+                    {% else %}
+                        <span class="badge bg-success">User</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p><strong>Member Since:</strong><br>
+                    {{ user_data.get('created_at', 'Unknown')[:10] if user_data.get('created_at') else 'Unknown' }}</p>
+                    
+                    <p><strong>Total Boosts:</strong><br>
+                    <span class="text-primary fs-4">{{ user_data.get('total_boosts', 0) }}</span></p>
+                    
+                    <p><strong>Keys Used:</strong><br>
+                    <span class="text-success fs-4">{{ user_data.get('keys_used', [])|length }}</span></p>
+                    
+                    <hr>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-history me-2"></i>Boost History</h4>
+                </div>
+                <div class="card-body">
+                    {% if user_data.get('keys_used') %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Key Type</th>
+                                        <th>Amount</th>
+                                        <th>Successful Boosts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key_usage in user_data.keys_used|reverse %}
+                                    <tr>
+                                        <td>{{ key_usage.get('date', 'Unknown')[:10] if key_usage.get('date') else 'Unknown' }}</td>
+                                        <td>
+                                            <span class="badge bg-info">{{ key_usage.get('months', 'N/A') }} Month</span>
+                                        </td>
+                                        <td>{{ key_usage.get('amount', 0) }} Boosts</td>
+                                        <td>
+                                            <span class="text-success">{{ key_usage.get('successful_boosts', 0) }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-history fa-3x mb-3"></i>
+                            <h5>No boost history yet</h5>
+                            <p>Your boost history will appear here once you start using keys</p>
+                            <a href="{{ url_for('redeem_page') }}" class="btn btn-primary">
+                                <i class="fas fa-key me-2"></i>Redeem Your First Key
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4><i class="fas fa-chart-bar me-2"></i>Statistics</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
+                                    <h5>Account Age</h5>
+                                    <p class="text-muted">
+                                        {% if user_data.get('created_at') %}
+                                            {{ ((user_data.created_at|length > 10) and 
+                                                (user_data.created_at[:10]|string) or 'Unknown') }}
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-crown fa-2x text-warning mb-2"></i>
+                                    <h5>Account Status</h5>
+                                    <p class="text-muted">
+                                        {% if session.is_admin %}
+                                            <span class="badge bg-warning">Administrator</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Active User</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

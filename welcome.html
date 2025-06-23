@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detroid Server Boosting - Landing</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: url('/static/images/2dde6502e0f44e21876df9ed.webp') center center/cover no-repeat fixed,
+                        linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+         /* Credit Bar */
+        .credit-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 0;
+            z-index: 1000;
+            text-align: center;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .credit-text {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+
+        .credit-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .credit-link:hover {
+            color: #7c4dff;
+            text-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
+        }
+
+        .credit-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #667eea, #7c4dff);
+            transition: width 0.3s ease;
+        }
+
+        .credit-link:hover::after {
+            width: 100%;
+        }
+
+        .username-highlight {
+            color: #ffd700;
+            font-weight: 700;
+        }
+        /* Snow Animation */
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1em;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(var(--drift, 0)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0px); }
+            25% { transform: translateX(20px); }
+            75% { transform: translateX(-20px); }
+        }
+
+        .snowflake:nth-child(4n) {
+            animation-timing-function: ease-in-out;
+        }
+
+        .snowflake:nth-child(4n+1) {
+            animation-timing-function: linear;
+        }
+
+        .snowflake:nth-child(4n+2) {
+            animation-timing-function: ease-out;
+        }
+
+        .snowflake:nth-child(4n+3) {
+            animation-timing-function: ease-in;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .particle.type-1 {
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+        }
+
+        .particle.type-2 {
+            width: 5px;
+            height: 5px;
+            background: rgba(135, 206, 235, 0.7);
+            box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+        }
+
+        .particle.type-3 {
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 182, 193, 0.9);
+            box-shadow: 0 0 8px rgba(255, 182, 193, 0.6);
+        }
+
+        .particle.orb {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 70%, transparent 100%);
+            animation: float 12s ease-in-out infinite, pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) rotate(0deg); 
+                opacity: 0.7;
+            }
+            25% { 
+                transform: translateY(-30px) translateX(20px) rotate(90deg); 
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-15px) translateX(-10px) rotate(180deg); 
+                opacity: 0.8;
+            }
+            75% { 
+                transform: translateY(-40px) translateX(30px) rotate(270deg); 
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .welcome-content {
+            padding: 50px 20px;
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-glow {
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.4),
+                2px 2px 4px rgba(0, 0, 0, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 
+                    0 0 10px rgba(255, 255, 255, 0.8), 
+                    0 0 20px rgba(255, 255, 255, 0.6), 
+                    0 0 30px rgba(255, 255, 255, 0.4),
+                    2px 2px 4px rgba(0, 0, 0, 0.8);
+            }
+            to { 
+                text-shadow: 
+                    0 0 20px rgba(255, 255, 255, 1), 
+                    0 0 30px rgba(255, 255, 255, 0.8), 
+                    0 0 40px rgba(255, 255, 255, 0.6),
+                    2px 2px 6px rgba(0, 0, 0, 0.9);
+            }
+        }
+
+        .rocket-icon {
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .btn-enhanced {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-enhanced:hover::before {
+            left: 100%;
+        }
+
+        .btn-enhanced:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-success-enhanced {
+            background: linear-gradient(45deg, #56ab2f 0%, #a8e6cf 100%);
+        }
+
+        .text-purple {
+            color: #8b5cf6 !important;
+        }
+
+        .lead-enhanced {
+            font-size: 1.5rem;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .description-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .text-white {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-content {
+                margin: 10px;
+                padding: 30px 15px;
+            }
+
+            .display-2 {
+                font-size: 2.5rem;
+            }
+
+            .lead-enhanced {
+                font-size: 1.2rem;
+            }
+        }
+
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .sparkle::before {
+            content: '✨';
+            font-size: 20px;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="snow-container" id="snowContainer"></div>
+    <div class="particles" id="particles"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="sparkle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="sparkle" style="top: 20%; right: 15%; animation-delay: 1s;"></div>
+    <div class="sparkle" style="bottom: 30%; left: 20%; animation-delay: 2s;"></div>
+    <div class="sparkle" style="bottom: 10%; right: 10%; animation-delay: 0.5s;"></div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+                <div class="col-lg-10 text-center">
+                    <div class="welcome-content">
+                        <h1 class="display-2 text-white mb-4 font-weight-bold title-glow">
+                            <i class="fas fa-rocket text-warning me-3 rocket-icon"></i>
+                            Detroid Server Boosting™
+                        </h1>
+                        <p class="lead-enhanced text-white mb-4">
+                            Fastest Server Boosting Service
+                        </p>
+                        <p class="description-text text-white mb-5">
+                            Get your Discord Server Boosted within Seconds with our Boosting Panel. 
+                            Real-time Stock Monitoring, Secure Key Redemption and 24/7 Automated Service.
+                        </p>
+
+                        <div class="row justify-content-center mb-5">
+                            <div class="col-md-3 col-6 mb-3">
+                                <a href="/login" class="btn btn-enhanced w-100 text-white">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    Login
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <a href="/register" class="btn btn-enhanced btn-success-enhanced w-100 text-white">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                    Register
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row text-center g-4">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="feature-card p-4 h-100">
+                                    <i class="fas fa-bolt fa-3x text-warning mb-3 feature-icon"></i>
+                                    <h4 class="text-white mb-3">Instant Boosts</h4>
+                                    <p class="text-light">Lightning Fast Server Boosting with our Boosting Panel and UHQ Nitro Tokens</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="feature-card p-4 h-100">
+                                    <i class="fas fa-shield-alt fa-3x text-success mb-3 feature-icon"></i>
+                                    <h4 class="text-white mb-3">100% Safe</h4>
+                                    <p class="text-light">Most Secure and Reliable Service with End to End Encrypted Connections</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="feature-card p-4 h-100">
+                                    <i class="fas fa-clock fa-3x text-info mb-3 feature-icon"></i>
+                                    <h4 class="text-white mb-3">24/7 Service</h4>
+                                    <p class="text-light">Always Available to Boost your Discord Server!</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="feature-card p-4 h-100">
+                                    <i class="fas fa-key fa-3x text-purple mb-3 feature-icon"></i>
+                                    <h4 class="text-white mb-3">Key System</h4>
+                                    <p class="text-light">Secure Key Redemption with Instant Boosting & Checkout</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <h3 class="text-warning mb-1">10,000+</h3>
+                                    <p class="text-light">Servers Boosted</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <h3 class="text-success mb-1">99.99%</h3>
+                                    <p class="text-light">Success Rate</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <h3 class="text-info mb-1">24/7</h3>
+                                    <p class="text-light">Support Available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function createSnow() {
+            const snowContainer = document.getElementById('snowContainer');
+            const snowflakes = ['❄', '❅', '❆', '⛄', '⛇', '❋', '❉', '❊'];
+
+            for (let layer = 0; layer < 3; layer++) {
+                const layerFlakes = layer === 0 ? 100 : layer === 1 ? 75 : 50;
+                const layerSpeed = layer === 0 ? [8, 15] : layer === 1 ? [12, 20] : [15, 25];
+                const layerSize = layer === 0 ? [8, 16] : layer === 1 ? [12, 20] : [16, 28];
+                const layerOpacity = layer === 0 ? 0.3 : layer === 1 ? 0.6 : 0.9;
+
+                for (let i = 0; i < layerFlakes; i++) {
+                    const snowflake = document.createElement('div');
+                    snowflake.className = 'snowflake';
+                    snowflake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+
+                    snowflake.style.left = Math.random() * 100 + '%';
+                    snowflake.style.animationDuration = Math.random() * (layerSpeed[1] - layerSpeed[0]) + layerSpeed[0] + 's';
+                    snowflake.style.animationDelay = Math.random() * 5 + 's';
+                    snowflake.style.fontSize = Math.random() * (layerSize[1] - layerSize[0]) + layerSize[0] + 'px';
+                    snowflake.style.opacity = layerOpacity;
+
+                    snowflake.style.setProperty('--drift', (Math.random() - 0.5) * 100 + 'px');
+
+                    if (Math.random() > 0.7) {
+                        snowflake.style.animation += ', sway 4s ease-in-out infinite';
+                    }
+
+                    snowContainer.appendChild(snowflake);
+                }
+            }
+
+            setInterval(() => {
+                if (snowContainer.children.length < 300) {
+                    const newFlake = document.createElement('div');
+                    newFlake.className = 'snowflake';
+                    newFlake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                    newFlake.style.left = Math.random() * 100 + '%';
+                    newFlake.style.animationDuration = Math.random() * 10 + 8 + 's';
+                    newFlake.style.fontSize = Math.random() * 15 + 10 + 'px';
+                    newFlake.style.opacity = Math.random() * 0.8 + 0.2;
+                    snowContainer.appendChild(newFlake);
+
+                    setTimeout(() => {
+                        if (newFlake.parentNode) {
+                            newFlake.parentNode.removeChild(newFlake);
+                        }
+                    }, 20000);
+                }
+            }, 500);
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleTypes = ['type-1', 'type-2', 'type-3', 'orb'];
+
+            for (let layer = 0; layer < 4; layer++) {
+                const particleCount = [15, 20, 25, 10][layer];
+                const particleType = particleTypes[layer];
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = `particle ${particleType}`;
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 8 + 's';
+                    particle.style.animationDuration = Math.random() * 6 + 6 + 's';
+
+                    if (Math.random() > 0.7) {
+                        particle.style.animation += ', rotate 20s linear infinite';
+                    }
+
+                    particlesContainer.appendChild(particle);
+                }
+            }
+
+            setInterval(() => {
+                if (particlesContainer.children.length < 100) {
+                    const particle = document.createElement('div');
+                    particle.className = `particle ${particleTypes[Math.floor(Math.random() * particleTypes.length)]}`;
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.animationDelay = '0s';
+                    particle.style.animationDuration = Math.random() * 8 + 4 + 's';
+                    particlesContainer.appendChild(particle);
+
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 15000);
+                }
+            }, 2000);
+        }
+
+        function createMouseTrail() {
+            let mouseX = 0, mouseY = 0;
+            let trail = [];
+            const maxTrailLength = 20;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                trail.push({ x: mouseX, y: mouseY, time: Date.now() });
+                if (trail.length > maxTrailLength) {
+                    trail.shift();
+                }
+
+                if (Math.random() > 0.7) {
+                    createTrailParticle(mouseX, mouseY);
+                }
+
+                if (Math.random() > 0.95) {
+                    createSparkleEffect(mouseX, mouseY);
+                }
+            });
+
+            function createTrailParticle(x, y) {
+                const trail = document.createElement('div');
+                trail.style.position = 'fixed';
+                trail.style.left = x + Math.random() * 20 - 10 + 'px';
+                trail.style.top = y + Math.random() * 20 - 10 + 'px';
+                trail.style.width = Math.random() * 6 + 2 + 'px';
+                trail.style.height = trail.style.width;
+                trail.style.background = `hsl(${Math.random() * 60 + 200}, 100%, 80%)`;
+                trail.style.borderRadius = '50%';
+                trail.style.pointerEvents = 'none';
+                trail.style.zIndex = '5';
+                trail.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px currentColor`;
+                trail.style.animation = 'trailFade 2s ease-out forwards';
+                document.body.appendChild(trail);
+
+                setTimeout(() => {
+                    if (trail.parentNode) {
+                        document.body.removeChild(trail);
+                    }
+                }, 2000);
+            }
+
+            function createSparkleEffect(x, y) {
+                const sparkle = document.createElement('div');
+                sparkle.innerHTML = '✨';
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                sparkle.style.fontSize = Math.random() * 20 + 15 + 'px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.zIndex = '6';
+                sparkle.style.animation = 'sparkleEffect 1.5s ease-out forwards';
+                document.body.appendChild(sparkle);
+
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        document.body.removeChild(sparkle);
+                    }
+                }, 1500);
+            }
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(0); }
+            }
+
+            @keyframes trailFade {
+                0% { 
+                    opacity: 1; 
+                    transform: scale(1) rotate(0deg); 
+                }
+                100% { 
+                    opacity: 0; 
+                    transform: scale(0) rotate(360deg); 
+                }
+            }
+
+            @keyframes sparkleEffect {
+                0% { 
+                    opacity: 0; 
+                    transform: scale(0) rotate(0deg); 
+                }
+                50% { 
+                    opacity: 1; 
+                    transform: scale(1.5) rotate(180deg); 
+                }
+                100% { 
+                    opacity: 0; 
+                    transform: scale(0) rotate(360deg); 
+                }
+            }
+
+            @keyframes rotate {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+
+            /* Professional hover effects for buttons */
+            .btn-enhanced {
+                background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                border-radius: 50px;
+                padding: 15px 30px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-enhanced::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .btn-enhanced:hover::before {
+                left: 100%;
+            }
+
+            .btn-enhanced:hover {
+                transform: translateY(-5px) scale(1.05);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+                background: linear-gradient(45deg, #7c4dff 0%, #9c27b0 100%);
+            }
+
+            .btn-enhanced:active {
+                transform: translateY(-2px) scale(1.02);
+                transition: all 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createSnow();
+            createParticles();
+        });
