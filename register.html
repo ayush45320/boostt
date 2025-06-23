@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Discord Boost Bot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --success-color: #00d4aa;
+            --danger-color: #f93a37;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-hard: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: url('/static/images/2dde6502e0f44e21876df9ed.webp') center/cover no-repeat fixed;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-primary);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.7) 0%, 
+                rgba(118, 75, 162, 0.8) 35%,
+                rgba(88, 101, 242, 0.9) 70%,
+                rgba(64, 78, 237, 0.85) 100%
+            );
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(88, 101, 242, 0.3) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 80%, rgba(118, 75, 162, 0.2) 0%, transparent 50%);
+            z-index: 2;
+        }
+
+        /* Advanced particle system */
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 70%, transparent 100%);
+            border-radius: 50%;
+            animation: float-complex 8s ease-in-out infinite;
+        }
+
+        @keyframes float-complex {
+            0%, 100% { 
+                transform: translate3d(0, 0, 0) rotate(0deg) scale(1); 
+                opacity: 0.4; 
+            }
+            25% { 
+                transform: translate3d(15px, -25px, 0) rotate(90deg) scale(1.1); 
+                opacity: 0.8; 
+            }
+            50% { 
+                transform: translate3d(-10px, -40px, 0) rotate(180deg) scale(0.9); 
+                opacity: 1; 
+            }
+            75% { 
+                transform: translate3d(-20px, -15px, 0) rotate(270deg) scale(1.05); 
+                opacity: 0.6; 
+            }
+        }
+
+        /* Geometric background patterns */
+        .geometric-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.02) 42%, rgba(255, 255, 255, 0.02) 43%, transparent 45%),
+                linear-gradient(-45deg, transparent 40%, rgba(255, 255, 255, 0.02) 42%, rgba(255, 255, 255, 0.02) 43%, transparent 45%);
+            background-size: 60px 60px;
+            z-index: 4;
+        }
+
+        /* Main container with enhanced positioning */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Professional glass morphism card */
+        .auth-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow-hard), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            transform: translateY(60px);
+            opacity: 0;
+            animation: slideUpFade 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Premium card header */
+        .card-header-premium {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .card-header-premium::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: wave-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        @keyframes wave-glow {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.2px;
+        }
+
+        .header-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            animation: bounce-subtle 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-2deg); }
+            50% { transform: translateY(-4px) rotate(1deg); }
+            75% { transform: translateY(-12px) rotate(-1deg); }
+        }
+
+        /* Enhanced card body */
+        .card-body-premium {
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Professional Discord OAuth button */
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .btn-primary {
+            width: 100%;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .discord-oauth-btn {
+            width: 100%;
+            height: 72px;
+            background: linear-gradient(135deg, var(--discord-blue) 0%, var(--discord-purple) 100%);
+            border: none;
+            border-radius: 18px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: var(--shadow-soft), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            letter-spacing: 0.3px;
+        }
+
+        .discord-oauth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .discord-oauth-btn:hover::before {
+            left: 100%;
+        }
+
+        .discord-oauth-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(88, 101, 242, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .discord-oauth-btn:active {
+            transform: translateY(-2px) scale(1.01);
+            transition: all 0.1s ease;
+        }
+
+        .discord-icon {
+            font-size: 1.8rem;
+            margin-right: 1rem;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); }
+            50% { filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6)); }
+        }
+
+        /* Enhanced info sections */
+        .info-section-premium {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-section-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--discord-blue), var(--discord-purple));
+            border-radius: 0 4px 4px 0;
+        }
+
+        .info-title-premium {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        .info-icon-premium {
+            color: var(--discord-blue);
+            margin-right: 0.8rem;
+            font-size: 1.4rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .info-text-premium {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+
+        .info-list-premium {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list-premium li {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .info-list-premium li:hover {
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .info-list-premium li::before {
+            content: '✓';
+            color: var(--success-color);
+            font-weight: bold;
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            filter: drop-shadow(0 0 4px rgba(0, 212, 170, 0.4));
+        }
+
+        /* Security section with enhanced styling */
+        .security-section {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(0, 212, 170, 0.05) 100%);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            border-radius: 20px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .security-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--success-color), transparent);
+            animation: security-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes security-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .security-title {
+            color: var(--success-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .security-icon {
+            margin-right: 0.8rem;
+            font-size: 1.3rem;
+            animation: shield-glow 2s infinite;
+        }
+
+        @keyframes shield-glow {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(0, 212, 170, 0.3)); }
+            50% { filter: drop-shadow(0 0 12px rgba(0, 212, 170, 0.6)); }
+        }
+
+        .security-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Enhanced login section */
+        .login-section {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .login-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 16px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Premium benefits card */
+        .benefits-card-premium {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUpFade 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .benefits-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+            text-align: center;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: fadeInLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:nth-child(2) { animation-delay: 0.2s; }
+        .benefit-item:nth-child(3) { animation-delay: 0.4s; }
+        .benefit-item:nth-child(4) { animation-delay: 0.6s; }
+        .benefit-item:nth-child(5) { animation-delay: 0.8s; }
+        .benefit-item:nth-child(6) { animation-delay: 1s; }
+
+        .benefit-item:hover {
+            color: var(--text-primary);
+            transform: translateX(8px);
+        }
+
+        @keyframes fadeInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .benefit-icon {
+            color: var(--success-color);
+            margin-right: 1rem;
+            font-size: 1.3rem;
+            animation: pulse-benefit 2.5s infinite;
+            filter: drop-shadow(0 0 4px rgba(0, 212, 170, 0.3));
+        }
+
+        @keyframes pulse-benefit {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Enhanced loading state */
+        .loading-state {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top: 4px solid var(--discord-purple);
+            animation: spin-glow 1.2s linear infinite;
+            margin-bottom: 1.2rem;
+        }
+
+        @keyframes spin-glow {
+            0% { transform: rotate(0deg); filter: drop-shadow(0 0 5px rgba(88, 101, 242, 0.3)); }
+            50% { filter: drop-shadow(0 0 15px rgba(88, 101, 242, 0.6)); }
+            100% { transform: rotate(360deg); filter: drop-shadow(0 0 5px rgba(88, 101, 242, 0.3)); }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Enhanced alert system */
+        .alert-premium {
+            border: none;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-bottom: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-soft);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.2) 0%, rgba(0, 212, 170, 0.1) 100%);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(249, 58, 55, 0.2) 0%, rgba(249, 58, 55, 0.1) 100%);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        /* Terms section */
+        .terms-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .terms-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .terms-link {
+            color: var(--discord-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .terms-link:hover {
+            color: var(--discord-purple);
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .auth-card {
+                margin: 0.5rem;
+                border-radius: 24px;
+            }
+
+            .card-header-premium {
+                padding: 2rem 1.5rem;
+            }
+
+            .card-body-premium {
+                padding: 2rem 1.5rem;
+            }
+
+            .benefits-card-premium {
+                padding: 2rem 1.5rem;
+                margin-top: 1.5rem;
+            }
+
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .discord-oauth-btn {
+                height: 68px;
+                font-size: 1.2rem;
+            }
+
+            .info-section-premium {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.7rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .discord-oauth-btn {
+                height: 64px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Advanced hover effects */
+        .auth-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Advanced particle system -->
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- Geometric background -->
+    <div class="geometric-bg"></div>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8 col-sm-10">
+                    <div class="auth-card">
+                        <!-- Premium Card Header -->
+                        <div class="card-header-premium">
+                            <h1 class="header-title">
+                                <i class="fas fa-user-plus header-icon"></i>
+                                Create Account
+                            </h1>
+                            <p class="header-subtitle">Join the Discord Boost Bot community</p>
+                        </div>
+
+                        <!-- Premium Card Body -->
+                        <div class="card-body-premium">
+                            <!-- Flash Messages -->
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ 'danger' if category == 'error' else category }}">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Username
+                                    </label>
+                                    <input type="text" class="form-control" id="username" name="username" 
+                                           placeholder="Enter your username" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Password
+                                    </label>
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           placeholder="Create a password" required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="confirm_password" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Confirm Password
+                                    </label>
+                                    <input type="password" class="form-control" id="confirm_password" 
+                                           name="confirm_password" placeholder="Confirm your password" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-2"></i>Create Account
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Login Section -->
+                        <div class="login-section">
+                            <p class="login-text">Already have an account?</p>
+                            <a href="{{ url_for('login') }}" class="btn-login">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Discord Boost Bot. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="/terms" class="footer-link">Terms</a>
+                    <a href="/privacy" class="footer-link">Privacy</a>
+                    <a href="/support" class="footer-link">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Premium Benefits Card */
+        .benefits-card-premium {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 140, 0, 0.1));
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        .benefits-card-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shimmer 4s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+
+        /* Dashboard Access */
+        .dashboard-access {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+            animation: slideUp 1s ease-out 1s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .access-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .access-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .btn-dashboard {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-dashboard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.5);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        /* Success Animation */
+        .success-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(76, 175, 80, 0.95);
+            color: white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1000;
+            animation: successPop 0.5s ease-out;
+            display: none;
+        }
+
+        @keyframes successPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .benefits-card-premium {
+                padding: 20px;
+            }
+
+            .dashboard-access {
+                padding: 30px 20px;
+            }
+
+            .access-title {
+                font-size: 1.3rem;
+            }
+
+            .btn-dashboard {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            .footer-link {
+                margin-left: 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

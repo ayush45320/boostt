@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Boost Bot - Professional Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --danger-gradient: linear-gradient(135deg, #ff8a80 0%, #ea4c89 100%);
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            --glow-blue: 0 0 20px rgba(79, 172, 254, 0.3);
+            --glow-purple: 0 0 20px rgba(118, 75, 162, 0.3);
+            --glow-green: 0 0 20px rgba(0, 242, 254, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            background-image: 
+                url('/static/images/2dde6502e0f44e21876df9ed.webp'),
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.2), transparent 50%);
+            background-size: cover, 100% 100%, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+
+        /* Animated Background Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--text-primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Main Container */
+        .main-container {
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6)); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .live-indicator {
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg), var(--glow-blue);
+            border-color: rgba(79, 172, 254, 0.3);
+        }
+
+        /* Stock Cards */
+        .stock-card {
+            text-align: center;
+            height: 100%;
+        }
+
+        .stock-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .stock-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .stock-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px currentColor;
+            animation: numberPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes numberPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .stock-label {
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        /* Color Variants */
+        .text-success { color: #00ff88 !important; }
+        .text-primary { color: #4facfe !important; }
+        .text-warning { color: #ffc107 !important; }
+        .text-info { color: #17a2b8 !important; }
+        .text-purple { color: #8b5cf6 !important; }
+        .text-danger { color: #ff6b6b !important; }
+
+        /* Quick Actions */
+        .action-card {
+            text-align: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .action-btn {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .action-btn.success {
+            background: var(--success-gradient);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .action-btn.warning {
+            background: var(--warning-gradient);
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+        }
+
+        .action-btn.danger {
+            background: var(--danger-gradient);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Charts and Statistics */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 2rem 0;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+        }
+
+        .progress-circle svg {
+            transform: rotate(-90deg);
+            width: 120px;
+            height: 120px;
+        }
+
+        .progress-circle circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .progress-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-fill {
+            stroke: url(#gradient);
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            animation: progressFill 2s ease-out forwards;
+        }
+
+        @keyframes progressFill {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .stock-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification Toast */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Data Table */
+        .data-table {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            padding: 1rem;
+            border: none;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-gradient);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-rocket me-2"></i>
+                Discord Boost Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dashboard">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#analytics">
+                            <i class="fas fa-chart-line me-1"></i>Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#settings">
+                            <i class="fas fa-cog me-1"></i>Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#profile">
+                            <i class="fas fa-user me-1"></i>Profile
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="main-title">
+                    <i class="fas fa-rocket me-3"></i>
+                    Boost Command Center
+                </h1>
+                <p class="subtitle">
+                    Professional Discord server boosting with real-time monitoring and analytics
+                </p>
+                <div class="status-badge">
+                    <span class="live-indicator"></span>
+                    <span>System Online - All Services Active</span>
+                </div>
+            </div>
+
+            <!-- Live Stock Status -->
+            <div class="section-header">
+                <i class="fas fa-chart-bar section-icon"></i>
+                <h2 class="section-title">Live Stock Monitor</h2>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="glass-card stock-card">
+                        <i class="fas fa-coins stock-icon text-success"></i>
+                        <h3 class="stock-title">1M Tokens</h3>
+                        <div class="stock-value text-success" id="1m-tokens">{{ stock['1m_tokens'] }}</div>
+                        <p class="stock-label">Available Tokens</p>
+                        <div class="progress-circle">
+                            <svg>
+                                <defs>
+                                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#4facfe;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="progress-bg" cx="60" cy="60" r="40"></circle>
+                                <circle class="progress-fill" cx="60" cy="60" r="40" stroke="url(#gradient1)"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="glass-card stock-card">
+                        <i class="fas fa-coins stock-icon text-success"></i>
+                        <h3 class="stock-title">3M Tokens</h3>
+                        <div class="stock-value text-success" id="3m-tokens">{{ stock['3m_tokens'] }}</div>
+                        <p class="stock-label">Available Tokens</p>
+                        <div class="progress-circle">
+                            <svg>
+                                <circle class="progress-bg" cx="60" cy="60" r="40"></circle>
+                                <circle class="progress-fill" cx="60" cy="60" r="40" stroke="url(#gradient1)"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="glass-card stock-card">
+                        <i class="fas fa-bolt stock-icon text-primary"></i>
+                        <h3 class="stock-title">1M Boosts</h3>
+                        <div class="stock-value text-primary" id="1m-boosts">{{ stock['1m_boosts'] }}</div>
+                        <p class="stock-label">Available Boosts</p>
+                        <div class="progress-circle">
+                            <svg>
+                                <defs>
+                                    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="progress-bg" cx="60" cy="60" r="40"></circle>
+                                <circle class="progress-fill" cx="60" cy="60" r="40" stroke="url(#gradient2)"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="glass-card stock-card">
+                        <i class="fas fa-bolt stock-icon text-primary"></i>
+                        <h3 class="stock-title">3M Boosts</h3>
+                        <div class="stock-value text-primary" id="3m-boosts">{{ stock['3m_boosts'] }}</div>
+                        <p class="stock-label">Available Boosts</p>
+                        <div class="progress-circle">
+                            <svg>
+                                <circle class="progress-bg" cx="60" cy="60" r="40"></circle>
+                                <circle class="progress-fill" cx="60" cy="60" r="40" stroke="url(#gradient2)"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Statistics -->
+            <div class="section-header">
+                <i class="fas fa-key section-icon"></i>
+                <h2 class="section-title">Key Management Hub</h2>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card">
+                        <div class="text-center">
+                            <i class="fas fa-key stock-icon text-warning"></i>
+                            <h3 class="stock-title">Total Keys</h3>
+                            <div class="stock-value text-warning" id="total-keys">{{ keys['total_keys'] }}</div>
+                            <p class="stock-label">Available for redemption</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card">
+                        <div class="text-center">
+                            <i class="fas fa-calendar stock-icon text-info"></i>
+                            <h3 class="stock-title">1 Month Keys</h3>
+                            <div class="stock-value text-info" id="1m-keys">{{ keys['1m_keys'] }}</div>
+                            <p class="stock-label">Short-term boosts</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card">
+                        <div class="text-center">
+                            <i class="fas fa-calendar-alt stock-icon text-purple"></i>
+                            <h3 class="stock-title">3 Month Keys</h3>
+                            <div class="stock-value text-purple" id="3m-keys">{{ keys['3m_keys'] }}</div>
+                            <p class="stock-label">Long-term boosts</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section-header">
+                <i class="fas fa-lightning-bolt section-icon"></i>
+                <h2 class="section-title">Command Center</h2>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card action-card">
+                        <i class="fas fa-unlock-alt stock-icon text-success"></i>
+                        <h3 class="stock-title">Redeem Key</h3>
+                        <p class="text-secondary mb-4">Use your purchased keys to boost servers automatically</p>
+                        <a href="/redeem" class="action-btn success">
+                            <i class="fas fa-play me-2"></i>Redeem Now
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card action-card">
+                        <i class="fas fa-shield-alt stock-icon text-warning"></i>
+                        <h3 class="stock-title">Admin Panel</h3>
+                        <p class="text-secondary mb-4">Manage keys, stock, and monitor boost operations</p>
+                        {% if is_admin %}
+                            <a href="/admin" class="action-btn warning">
+                                <i class="fas fa-tools me-2"></i>Admin Access
+                            </a>
+                        {% else %}
+                            <span class="action-btn warning disabled" style="opacity: 0.5; cursor: not-allowed;">
+                                <i class="fas fa-lock me-2"></i>Admin Only
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card action-card">
+                        <i class="fas fa-user stock-icon text-info"></i>
+                        <h3 class="stock-title">Profile</h3>
+                        <p class="text-secondary mb-4">View your boost history and account details</p>
+                        <a href="/profile" class="action-btn" style="background: var(--success-gradient);">
+                            <i class="fas fa-user me-2"></i>View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Activity Feed -->
+            <div class="row mb-5">
+                <div class="col-lg-8 mb-4">
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <i class="fas fa-stream section-icon"></i>
+                            <h3 class="section-title">Live Activity Feed</h3>
+                        </div>
+                        <div class="activity-feed" id="activity-feed">
+                            <!-- Activity items will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <i class="fas fa-server section-icon"></i>
+                            <h3 class="section-title">System Status</h3>
+                        </div>
+                        <div class="system-status">
+                            <div class="status-item mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary">API Server</span>
+                                    <span class="badge bg-success">Online</span>
+                                </div>
+                            </div>
+                            <div class="status-item mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary">Database</span>
+                                    <span class="badge bg-success">Healthy</span>
+                                </div>
+                            </div>
+                            <div class="status-item mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary">Boost Engine</span>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                            </div>
+                            <div class="status-item mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary">Token Manager</span>
+                                    <span class="badge bg-warning">Updating</span>
+                                </div>
+                            </div>
+                            <div class="status-item mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary">Discord Gateway</span>
+                                    <span class="badge bg-success">Connected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Breakdown Analytics -->
+            {% if keys['amount_breakdown'] %}
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <i class="fas fa-chart-pie section-icon"></i>
+                            <h3 class="section-title">Key Amount Breakdown</h3>
+                        </div>
+                        <div class="row">
+                            {% for amount, breakdown in keys['amount_breakdown'].items() %}
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="breakdown-card">
+                                    <h4 class="text-center mb-3">{{ amount }} Boost Keys</h4>
+                                    <div class="row">
+                                        <div class="col-6 text-center">
+                                            <div class="breakdown-value text-info">{{ breakdown['1m'] }}</div>
+                                            <small class="text-muted">1 Month</small>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <div class="breakdown-value text-purple">{{ breakdown['3m'] }}</div>
+                                            <small class="text-muted">3 Month</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recent Transactions Table -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <i class="fas fa-history section-icon"></i>
+                            <h3 class="section-title">Recent Transactions</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-table">
+                                    <!-- Transactions will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="row mb-5">
+                <div class="col-lg-6 mb-4">
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <i class="fas fa-tachometer-alt section-icon"></i>
+                            <h3 class="section-title">Performance Metrics</h3>
+                        </div>
+                        <div class="metric-item mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-secondary">Success Rate</span>
+                                <span class="text-success font-weight-bold">98.7%</span>
+                            </div>
+                            <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                                <div class="progress-bar" style="width: 98.7%; background: linear-gradient(90deg, #00ff88, #4facfe);"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-secondary">Average Response Time</span>
+                                <span class="text-info font-weight-bold">1.2s</span>
+                            </div>
+                            <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                                <div class="progress-bar" style="width: 85%; background: linear-gradient(90deg, #4facfe, #764ba2);"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-secondary">Server Uptime</span>
+                                <span class="text-warning font-weight-bold">99.9%</span>
+                            </div>
+                            <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                                <div class="progress-bar" style="width: 99.9%; background: linear-gradient(90deg, #ffc107, #ff8a80);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <i class="fas fa-users section-icon"></i>
+                            <h3 class="section-title">User Statistics</h3>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="user-stat">
+                                    <div class="stat-value text-success" data-target="15847">0</div>
+                                    <div class="stat-label">Total Users</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="user-stat">
+                                    <div class="stat-value text-primary" data-target="3429">0</div>
+                                    <div class="stat-label">Active Users</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="user-stat">
+                                    <div class="stat-value text-warning" data-target="8934">0</div>
+                                    <div class="stat-label">Premium Users</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="user-stat">
+                                    <div class="stat-value text-info" data-target="1256">0</div>
+                                    <div class="stat-label">New Today</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="refreshData()">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let isDataLoading = false;
+        let updateInterval;
+        let activityItems = [];
+        let transactionData = [];
+
+        // Initialize particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const size = Math.random() * 4 + 1;
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                const delay = Math.random() * 6;
+
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.animationDelay = delay + 's';
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Animate numbers
+        function animateNumber(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+
+        // Initialize number animations for static elements only
+        function initializeNumbers() {
+            document.querySelectorAll('[data-target]').forEach(element => {
+                const target = parseInt(element.getAttribute('data-target'));
+                animateNumber(element, target);
+            });
+
+            // Add real-time update for stock values
+            updateStockData();
+        }
+
+        // Update stock data from server
+        function updateStockData() {
+            fetch('/api/stock')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('1m-tokens').textContent = data['1m_tokens'].toLocaleString();
+                    document.getElementById('3m-tokens').textContent = data['3m_tokens'].toLocaleString();
+                    document.getElementById('1m-boosts').textContent = data['1m_boosts'].toLocaleString();
+                    document.getElementById('3m-boosts').textContent = data['3m_boosts'].toLocaleString();
+                })
+                .catch(error => console.log('Error updating stock:', error));
+        }
+
+        // Generate random activity data
+        function generateActivityData() {
+            const activities = [
+                { icon: 'fas fa-bolt', text: 'Server boost activated for Guild #1234', time: '2 minutes ago', type: 'success' },
+                { icon: 'fas fa-key', text: '7 new keys generated successfully', time: '5 minutes ago', type: 'info' },
+                { icon: 'fas fa-user-plus', text: 'New premium user registered', time: '8 minutes ago', type: 'primary' },
+                { icon: 'fas fa-coins', text: 'Token stock replenished (+500)', time: '12 minutes ago', type: 'success' },
+                { icon: 'fas fa-shield-alt', text: 'Security scan completed - All clear', time: '15 minutes ago', type: 'warning' },
+                { icon: 'fas fa-server', text: 'Server maintenance completed', time: '18 minutes ago', type: 'info' },
+                { icon: 'fas fa-chart-line', text: 'Daily analytics report generated', time: '22 minutes ago', type: 'primary' },
+                { icon: 'fas fa-bell', text: 'System notification sent to all users', time: '25 minutes ago', type: 'warning' }
+            ];
+
+            return activities;
+        }
+
+        // Generate random transaction data
+        function generateTransactionData() {
+            const transactions = [
+                { id: 'TXN-2024-001', type: '14 Boost Key', amount: '$49.99', status: 'Completed', time: '10:30 AM' },
+                { id: 'TXN-2024-002', type: '7 Boost Key', amount: '$29.99', status: 'Processing', time: '10:15 AM' },
+                { id: 'TXN-2024-003', type: '3 Boost Key', amount: '$15.99', status: 'Completed', time: '09:45 AM' },
+                { id: 'TXN-2024-004', type: '14 Boost Key', amount: '$49.99', status: 'Failed', time: '09:30 AM' },
+                { id: 'TXN-2024-005', type: '7 Boost Key', amount: '$29.99', status: 'Completed', time: '09:15 AM' }
+            ];
+
+            return transactions;
+        }
+
+        // Populate activity feed
+        function populateActivityFeed() {
+            const activityFeed = document.getElementById('activity-feed');
+            const activities = generateActivityData();
+
+            activityFeed.innerHTML = '';
+
+            activities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+
+                activityItem.innerHTML = `
+                    <div class="activity-icon bg-${activity.type}">
+                        <i class="${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">${activity.text}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+
+                activityFeed.appendChild(activityItem);
+            });
+        }
+
+        // Populate transactions table
+        function populateTransactionsTable() {
+            const tableBody = document.getElementById('transactions-table');
+            const transactions = generateTransactionData();
+
+            tableBody.innerHTML = '';
+
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+
+                let statusClass = 'success';
+                if (transaction.status === 'Processing') statusClass = 'warning';
+                if (transaction.status === 'Failed') statusClass = 'danger';
+
+                row.innerHTML = `
+                    <td><code>${transaction.id}</code></td>
+                    <td>${transaction.type}</td>
+                    <td><strong>${transaction.amount}</strong></td>
+                    <td><span class="badge bg-${statusClass}">${transaction.status}</span></td>
+                    <td>${transaction.time}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast show`;
+
+            let icon = 'fas fa-info-circle';
+            if (type === 'success') icon = 'fas fa-check-circle';
+            if (type === 'warning') icon = 'fas fa-exclamation-triangle';
+            if (type === 'danger') icon = 'fas fa-times-circle';
+
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <i class="${icon} me-2 text-${type}"></i>
+                    <strong class="me-auto">System Notification</strong>
+                    <small>Just now</small>
+                    <button type="button" class="btn-close" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // Refresh data function
+        function refreshData() {
+            if (isDataLoading) return;
+
+            isDataLoading = true;
+            const fab = document.querySelector('.fab');
+            fab.innerHTML = '<div class="loading-spinner"></div>';
+
+            showToast('Refreshing dashboard data...', 'info');
+
+            setTimeout(() => {
+                // Simulate data refresh
+                initializeNumbers();
+                populateActivityFeed();
+                populateTransactionsTable();
+
+                fab.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                isDataLoading = false;
+
+                showToast('Dashboard data updated successfully!', 'success');
+            }, 2000);
+        }
+
+        // Auto-refresh functionality
+        function startAutoRefresh() {
+            updateInterval = setInterval(() => {
+                // Update activity feed with new items
+                const newActivity = {
+                    icon: 'fas fa-bolt',
+                    text: `Server boost activated for Guild #${Math.floor(Math.random() * 9999)}`,
+                    time: 'Just now',
+                    type: 'success'
+                };
+
+                const activityFeed = document.getElementById('activity-feed');
+                const firstChild = activityFeed.firstChild;
+
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.style.opacity = '0';
+                activityItem.style.transform = 'translateX(-20px)';
+
+                activityItem.innerHTML = `
+                    <div class="activity-icon bg-${newActivity.type}">
+                        <i class="${newActivity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">${newActivity.text}</div>
+                        <div class="activity-time">${newActivity.time}</div>
+                    </div>
+                `;
+
+                activityFeed.insertBefore(activityItem, firstChild);
+
+                // Animate in
+                setTimeout(() => {
+                    activityItem.style.transition = 'all 0.3s ease';
+                    activityItem.style.opacity = '1';
+                    activityItem.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Remove last item if too many
+                if (activityFeed.children.length > 8) {
+                    activityFeed.removeChild(activityFeed.lastChild);
+                }
+
+                // Update real stock data
+                updateStockData();
+
+            }, 10000); // Update every 10 seconds
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            initializeNumbers();
+            populateActivityFeed();
+            populateTransactionsTable();
+            startAutoRefresh();
+
+            // Show welcome toast
+            setTimeout(() => {
+                showToast('Welcome to Discord Boost Pro Dashboard!', 'success');
+            }, 1000);
+        });
+
+        // Handle window resize for particles
+        window.addEventListener('resize', function() {
+            const particlesContainer = document.getElementById('particles');
+            particlesContainer.innerHTML = '';
+            createParticles();
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add click effect to cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                    const ripple = document.createElement('div');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        pointer-events: none;
+                        z-index: 1;
+                    `;
+
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                }
+            });
+        });
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+
+            .breakdown-card {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 1.5rem;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .breakdown-card:hover {
+                background: rgba(255, 255, 255, 0.08);
+                transform: translateY(-2px);
+            }
+
+            .breakdown-value {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            .user-stat {
+                padding: 1rem;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.05);
+                transition: all 0.3s ease;
+            }
+
+            .user-stat:hover {
+                background: rgba(255, 255, 255, 0.08);
+                transform: translateY(-2px);
+            }
+
+            .stat-value {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-label {
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .badge {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 20px;
+            }
+
+            .bg-success { background: linear-gradient(135deg, #00ff88, #4facfe) !important; }
+            .bg-warning { background: linear-gradient(135deg, #ffc107, #ff8a80) !important; }
+            .bg-danger { background: linear-gradient(135deg, #ff6b6b, #ea4c89) !important; }
+            .bg-info { background: linear-gradient(135deg, #17a2b8, #764ba2) !important; }
+            .bg-primary { background: linear-gradient(135deg, #4facfe, #764ba2) !important; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

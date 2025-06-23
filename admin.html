@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Discord Boost Bot{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5">
+                <i class="fas fa-cog text-warning me-3"></i>
+                Admin Control Panel
+            </h1>
+            <p class="lead text-muted">Manage your Discord boost bot operations</p>
+        </div>
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-4">
+            <div class="card stock-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-coins fa-3x text-success mb-3"></i>
+                    <h4>Total Tokens</h4>
+                    <h2 class="text-success">{{ stock['1m_tokens'] + stock['3m_tokens'] }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card boost-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-bolt fa-3x text-primary mb-3"></i>
+                    <h4>Total Boosts</h4>
+                    <h2 class="text-primary">{{ stock['1m_boosts'] + stock['3m_boosts'] }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-key fa-3x text-warning mb-3"></i>
+                    <h4>Available Keys</h4>
+                    <h2 class="text-warning">{{ keys['total_keys'] }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                    <h4>Success Rate</h4>
+                    <h2 class="text-info">
+                        {{ "%.1f"|format((success_count / (success_count + failed_count) * 100) if (success_count + failed_count) > 0 else 0) }}%
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Management -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 mb-4">
+                <i class="fas fa-users text-info me-2"></i>User Management
+            </h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-info mb-3"></i>
+                    <h3 class="card-title">Total Users</h3>
+                    <h2 class="text-info">{{ total_users }}</h2>
+                    <p class="text-muted">Registered accounts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-cog me-2"></i>User Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <input type="text" class="form-control" id="manageUsername" placeholder="Enter username">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn-group w-100" role="group">
+                                <button class="btn btn-warning btn-sm" onclick="manageUser('make_admin')">
+                                    <i class="fas fa-crown me-1"></i>Make Admin
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="manageUser('remove_admin')">
+                                    <i class="fas fa-user-minus me-1"></i>Remove Admin
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="manageUser('delete_user')">
+                                    <i class="fas fa-trash me-1"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mt-3">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Total Boosts</th>
+                                    <th>Keys Used</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for username, user_data in users.items() %}
+                                <tr>
+                                    <td>{{ username }}</td>
+                                    <td>
+                                        {% if user_data.get('is_admin') %}
+                                            <span class="badge bg-warning">Admin</span>
+                                        {% else %}
+                                            <span class="badge bg-success">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user_data.get('total_boosts', 0) }}</td>
+                                    <td>{{ user_data.get('keys_used', [])|length }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Actions -->
+    <div class="row">
+        <!-- Key Management -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-key text-warning me-2"></i>Key Management
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="createKeysForm">
+                        <h5>Create New Keys</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Month</label>
+                                    <select class="form-control" id="keyMonth" required>
+                                        <option value="1">1 Month</option>
+                                        <option value="3">3 Months</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Amount</label>
+                                    <input type="number" class="form-control" id="keyAmount" min="2" step="2" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="keyQuantity" min="1" max="100" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-plus me-2"></i>Create Keys
+                        </button>
+                    </form>
+
+                    <hr>
+
+                    <h5>Key Statistics</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center p-2 bg-info bg-opacity-10 rounded">
+                                <h6>1M Keys</h6>
+                                <h4 class="text-info">{{ keys['1m_keys'] }}</h4>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-2 bg-purple bg-opacity-10 rounded">
+                                <h6>3M Keys</h6>
+                                <h4 class="text-purple">{{ keys['3m_keys'] }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stock Management -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-warehouse text-success me-2"></i>Stock Management
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="restockForm">
+                        <h5>Add Tokens</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Duration</label>
+                            <select class="form-control" id="stockDuration" required>
+                                <option value="1">1 Month Tokens</option>
+                                <option value="3">3 Month Tokens</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tokens (one per line)</label>
+                            <textarea class="form-control" id="stockTokens" rows="5" 
+                                      placeholder="token1&#10;token2&#10;email:password:token3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Add to Stock
+                        </button>
+                    </form>
+
+                    <hr>
+
+                    <h5>Current Stock</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center p-2 bg-success bg-opacity-10 rounded">
+                                <h6>1M Tokens</h6>
+                                <h4 class="text-success" id="admin-1m-tokens">{{ stock['1m_tokens'] }}</h4>
+                                <small>{{ stock['1m_boosts'] }} boosts</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-2 bg-primary bg-opacity-10 rounded">
+                                <h6>3M Tokens</h6>
+                                <h4 class="text-primary" id="admin-3m-tokens">{{ stock['3m_tokens'] }}</h4>
+                                <small>{{ stock['3m_boosts'] }} boosts</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics and Logs -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-chart-bar text-info me-2"></i>Performance Statistics
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 bg-success bg-opacity-10 rounded">
+                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                <h4>Successful Boosts</h4>
+                                <h3 class="text-success">{{ success_count }}</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 bg-danger bg-opacity-10 rounded">
+                                <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                                <h4>Failed Boosts</h4>
+                                <h3 class="text-danger">{{ failed_count }}</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 bg-info bg-opacity-10 rounded">
+                                <i class="fas fa-percentage fa-2x text-info mb-2"></i>
+                                <h4>Success Rate</h4>
+                                <h3 class="text-info">
+                                    {{ "%.1f"|format((success_count / (success_count + failed_count) * 100) if (success_count + failed_count) > 0 else 0) }}%
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Create keys form
+document.getElementById('createKeysForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    showLoading(submitBtn);
+
+    const formData = {
+        month: parseInt(document.getElementById('keyMonth').value),
+        amount: parseInt(document.getElementById('keyAmount').value),
+        quantity: parseInt(document.getElementById('keyQuantity').value)
+    };
+
+    try {
+        const response = await fetch('/api/admin/create_keys', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showSuccess(result.message);
+            e.target.reset();
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            showError(result.error);
+        }
+    } catch (error) {
+        showError('An error occurred while creating keys');
+    } finally {
+        hideLoading(submitBtn, originalText);
+    }
+});
+
+// Restock form
+document.getElementById('restockForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    showLoading(submitBtn);
+
+    const formData = {
+        duration: parseInt(document.getElementById('stockDuration').value),
+        tokens: document.getElementById('stockTokens').value
+    };
+
+    try {
+        const response = await fetch('/api/admin/restock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showSuccess(result.message);
+            e.target.reset();
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            showError(result.error);
+        }
+    } catch (error) {
+        showError('An error occurred while restocking');
+    } finally {
+        hideLoading(submitBtn, originalText);
+    }
+});
+
+function showSuccess(message) {
+    const alertHtml = `
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+
+    document.querySelector('.container-fluid').insertAdjacentHTML('afterbegin', alertHtml);
+}
+
+function showError(message) {
+    const alertHtml = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+
+    document.querySelector('.container-fluid').insertAdjacentHTML('afterbegin', alertHtml);
+}
+
+// Update admin stock display
+socket.on('stock_update', function(data) {
+    document.getElementById('admin-1m-tokens').textContent = data['1m_tokens'];
+    document.getElementById('admin-3m-tokens').textContent = data['3m_tokens'];
+});
+
+    // User management functions
+    window.manageUser = function(action) {
+        const username = document.getElementById('manageUsername').value;
+        if (!username) {
+            alert('Please enter a username');
+            return;
+        }
+
+        if (action === 'delete_user' && !confirm(`Are you sure you want to delete user: ${username}?`)) {
+            return;
+        }
+
+        fetch('/api/admin/manage_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: action,
+                username: username
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred');
+        });
+    };
+});
+</script>
+
+<style>
+.text-purple {
+    color: #8b5cf6 !important;
+}
+.bg-purple {
+    background-color: #8b5cf6 !important;
+}
+</style>
+{% endblock %}
